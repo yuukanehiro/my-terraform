@@ -1,10 +1,10 @@
 # Lambdaにアタッチ用
 resource "aws_iam_policy" "lambda_exec_policy" {
-  name = "lambda-multi-policy-${var.environment}"
+  name = "lambda-multi-policy-${var.ENV_VALUE_ENVIRONMENT}"
   policy = file("${path.module}/policy/lambda-exec.json")
 }
 resource "aws_iam_role" "lambda_exec_role" {
-  name = "lambda-multi-role-${var.environment}"
+  name = "lambda-multi-role-${var.ENV_VALUE_ENVIRONMENT}"
   assume_role_policy = file("${path.module}/policy/assume-lambda.json")
 }
 resource "aws_iam_role_policy_attachment" "lambda_multi_role_attach_lambda_multi_policy" {

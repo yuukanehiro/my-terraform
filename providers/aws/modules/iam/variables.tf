@@ -1,1 +1,1 @@
-variable environment {}
+variable ENV_VALUE_ENVIRONMENT {}
