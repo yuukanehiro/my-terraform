@@ -1,0 +1,35 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+    commands:
+      - yum install -y epel-release
+      - yum install -y python-pip --enablerepo=epel
+      - yum install -y curl
+      - yum install -y jq
+      - yum install -y unzip
+      - pip install awscli
+      # Terraform
+      - wget https://releases.hashicorp.com/terraform/"$TF_VERSION"/terraform_"$TF_VERSION"_linux_amd64.zip
+      - unzip terraform_"$TF_VERSION"_linux_amd64.zip
+      - mv terraform /usr/local/bin/
+      - chmod +x /usr/local/bin/terraform
+      - cd ./providers/aws/environments/"$ENVIRONMENT"/
+  pre_build:
+    commands:
+      - curl -qL -o aws_credentials.json 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI > aws_credentials.json
+      - aws configure set region ap-northeast-1 --profile codebuild-"$ENVIRONMENT"
+      - aws configure set aws_access_key_id `jq -r '.AccessKeyId' aws_credentials.json`
+      - aws configure set aws_secret_access_key `jq -r '.SecretAccessKey' aws_credentials.json`
+      - aws configure set aws_session_token `jq -r '.Token' aws_credentials.json`
+      - terraform init -var=aws_profile=codebuild-"$ENVIRONMENT"
+  build:
+    commands:
+      # Terraform
+      - terraform fmt -recursive -check
+      - terraform init -input=false -no-color -var=aws_profile=codebuild-"$ENVIRONMENT"
+      - terraform validate
+      - terraform plan -var=aws_profile=codebuild-"$ENVIRONMENT"
+      - echo terraform plan completed on `date`
