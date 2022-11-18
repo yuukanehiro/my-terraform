@@ -24,3 +24,17 @@ resource "aws_iam_role_policy_attachment" "lambda_ec2_rds_stop_start_manager_rol
   role       = "${aws_iam_role.lambda_ec2_rds_stop_start_manager_role.name}"
   policy_arn = "${aws_iam_policy.lambda_ec2_rds_stop_start_manager_policy.arn}"
 }
+
+# CodePipeline ロール
+resource "aws_iam_role" "codepipeline" {
+  name = "codepipeline-${var.ENV_VALUE_ENVIRONMENT}"
+  assume_role_policy = file("${path.module}/policy/assume-codepipeline.json")
+}
+resource "aws_iam_policy" "codepipeline_policy" {
+  name = "codepipeline-policy-${var.ENV_VALUE_ENVIRONMENT}"
+  policy = file("${path.module}/policy/codepipeline-policy.json")
+}
+resource "aws_iam_role_policy_attachment" "codepipeline_policy_attach_codepipeline" {
+  role       = aws_iam_role.codepipeline.name
+  policy_arn = aws_iam_policy.codepipeline_policy.arn
+}
