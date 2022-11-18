@@ -12,3 +12,16 @@ JSON
 MANAGER_BY_TAG_INPUT_JSON_STOP = <<JSON
 {"region": "ap-northeast-1","action": "stop","app_env": "dev"}
 JSON
+
+# ==================
+# GCPへのバックアップ
+# ==================
+default_vpc_id = "vpc-xxxxx"
+backup_to_gcp_codebuild_image = "aws/codebuild/standard:5.0" # Ubuntu 20.04
+# バックアップ元S3
+backup_to_gcp_source_s3_list_bucket_arns = [
+  "arn:aws:s3:::sample-backup-develop"
+]
+backup_to_gcp_source_s3_get_object_arns = [
+  "arn:aws:s3:::sample-backup-develop/*"
+]

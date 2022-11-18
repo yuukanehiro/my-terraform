@@ -62,3 +62,18 @@ module "lambda" {
   aws_codecommit_repository_sample_lambda   = data.terraform_remote_state.common.outputs.aws_codecommit_repository_sample_lambda
 }
 
+# S3からGCPへ転送
+module "backup-to-gcp" {
+  source                                               = "../../module/backup-to-gcp"
+  ENV_VALUE_ENVIRONMENT                                = var.ENV_VALUE_ENVIRONMENT
+  ENV_NAME_ENVIRONMENT                                 = var.ENV_NAME_ENVIRONMENT
+  ENV_NAME_TF_VERSION                                  = var.ENV_NAME_TF_VERSION
+  ENV_VALUE_TF_VERSION                                 = var.ENV_VALUE_TF_VERSION
+  default_vpc_id                                       = var.default_vpc_id
+  codepipeline_service_role_arn                        = module.iam.codepipeline_service_role_arn
+  codebuild_service_role_arn                           = module.iam.codebuild_service_role_arn
+  backup_to_gcp_codebuild_image                        = var.backup_to_gcp_codebuild_image
+  aws_codecommit_repository_sample_backup_to_gcp_cicd = data.terraform_remote_state.common.outputs.aws_codecommit_repository_sample_backup_to_gcp_cicd
+  backup_to_gcp_source_s3_list_bucket_arns             = var.backup_to_gcp_source_s3_list_bucket_arns
+  backup_to_gcp_source_s3_get_object_arns              = var.backup_to_gcp_source_s3_get_object_arns
+}
