@@ -46,12 +46,12 @@ resource "aws_cloudwatch_event_rule" "ecs_refresh_start" {
   description         = "ECS Refresh"
   schedule_expression = "cron(0 18 ? * MON-SUN *)" // 初期値 cron(Minutes Hours Day-of-month Month Day-of-week Year)
   # コンソールで変更できるようにする
-  # lifecycle {
-  #   ignore_changes = [
-  #     schedule_expression,
-  #     is_enabled
-  #   ]
-  # }
+  lifecycle {
+    ignore_changes = [
+      schedule_expression,
+      is_enabled
+    ]
+  }
 }
 resource "aws_cloudwatch_event_target" "ecs_refresh_start" {
   rule      = "${aws_cloudwatch_event_rule.ecs_refresh_start.name}"
