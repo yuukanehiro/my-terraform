@@ -12,6 +12,7 @@ resource "aws_lambda_function" "ecs_refresh" {
     variables = {
       "${var.ENV_NAME_SLACK_CHANNEL_NAME_NOTICE}" = "${var.ENV_VALUE_SLACK_CHANNEL_NAME_NOTICE}"
       "${var.ENV_NAME_SLACK_WEBHOOK_URL}" = "${var.ENV_VALUE_SLACK_WEBHOOK_URL}"
+      DEPLOY_APP_NAMES = "" // ex. "app-A,app-B"
       ENVIRONMENT = "${var.ENV_VALUE_ENVIRONMENT}"
     }
   }
